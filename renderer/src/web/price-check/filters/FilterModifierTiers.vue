@@ -54,9 +54,12 @@ export default defineComponent({
         )) {
           if (tier === 1) out.push({ type: 'tier-1', tier })
           else if (tier === 2) out.push({ type: 'tier-2', tier })
+          else out.push({ type: 'tier-plain', tier })
         } else if (tier >= 2) {
           // fractured, explicit-* filters
           out.push({ type: 'not-tier-1', tier })
+        } else {
+          out.push({ type: 'tier-plain', tier })
         }
       }
       out.sort((a, b) => a.tier - b.tier)
@@ -70,7 +73,7 @@ export default defineComponent({
 </script>
 
 <style lang="postcss" module>
-.tier-1, .tier-2, .not-tier-1, .merc-gilded {
+.tier-1, .tier-2, .not-tier-1, .merc-gilded, .tier-plain {
   @apply rounded px-1;
   white-space: nowrap;
 }
@@ -86,5 +89,8 @@ export default defineComponent({
 }
 .merc-gilded {
   @apply bg-yellow-700 text-yellow-100;
+}
+.tier-plain {
+  @apply border -my-px border-gray-600 text-gray-400;
 }
 </style>

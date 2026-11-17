@@ -73,6 +73,8 @@
             :class="[$style['tag'], $style[`tag-${tag}`]]">{{ t(`filters.tag_${tag.replace('-', '_')}`) }}{{ (filter.sources.length > 1) ? ` x ${filter.sources.length}` : null }}</span>
           <filter-modifier-tiers v-if="!showBounds()"
             :filter="filter" :item="item" />
+          <span v-if="rangeText && !showBounds()"
+            :class="$style.rollRange">{{ rangeText }}</span>
           <filter-modifier-options v-if="rollOptions"
             show-checked="always"
             :options="rollOptions"
@@ -292,6 +294,15 @@ export default defineComponent({
         }
       }),
       roll: computed(() => props.filter.roll),
+      // possible range of the mod(s), known from advanced item description
+      rangeText: computed(() => {
+        const bounds = props.filter.roll?.bounds
+        if (!bounds) return undefined
+        // same number of decimals on both ends: 1.6–2.0
+        const decimals = (n: number) => (String(Number(n.toFixed(2))).split('.')[1] ?? '').length
+        const dp = Math.max(decimals(bounds.min), decimals(bounds.max))
+        return `${bounds.min.toFixed(dp)}–${bounds.max.toFixed(dp)}`
+      }),
       isHidden: computed(() => props.filter.hidden != null),
       rollTags: computed(() => {
         const out: string[] = []
@@ -445,6 +456,13 @@ export default defineComponent({
 
 .filter:not(:hover) > .mods {
   display: none;
+}
+
+.rollRange {
+  font-size: theme('fontSize.xs');
+  line-height: 1;
+  white-space: nowrap;
+  @apply text-gray-400;
 }
 
 .tag {
