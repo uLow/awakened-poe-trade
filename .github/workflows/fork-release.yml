@@ -70,11 +70,30 @@ jobs:
           fs.writeFileSync('electron-builder.fork.yml', out)
         "
         cat electron-builder.fork.yml
-    - name: Package and publish
+    # publish config is still needed: it is baked into app-update.yml
+    - name: Package
       working-directory: ./main
+      run: npx electron-builder build --win -p never --config electron-builder.fork.yml
+    - name: Hash
+      run: type .\main\dist\latest.yml
+
+    # one release, created once (electron-builder's own publishing creates it
+    # from each target in parallel and fails). File names use dashes like the
+    # urls in latest.yml.
+    - name: Publish release
+      working-directory: ./main/dist
       shell: bash
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: npx electron-builder build --win -p always --config electron-builder.fork.yml
-    - name: Hash
-      run: type .\main\dist\latest.yml
+        VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        mkdir upload
+        for f in *.exe *.blockmap latest.yml; do
+          cp "$f" "upload/${f// /-}"
+        done
+        ls upload
+        gh release create "v$VERSION" upload/* \
+          --repo "$GITHUB_REPOSITORY" \
+          --target "$GITHUB_SHA" \
+          --title "$VERSION" \
+          --notes "Built from $GITHUB_SHA"
