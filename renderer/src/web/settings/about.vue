@@ -27,6 +27,25 @@
         class="rounded bg-gray-900 px-1 block w-full font-sans mt-1" placeholder="owner/repo">
       <p class="text-gray-500 mt-1">{{ t('updates.channel_hint') }}</p>
     </div>
+    <div class="w-72 mt-4">
+      <div class="mb-1">{{ t('updates.pick_version') }}</div>
+      <button v-if="!releases" @click="listReleases" :disabled="releasesLoading"
+        class="btn w-full">{{ releasesLoading ? t('please_wait') : t('updates.show_versions') }}</button>
+      <template v-else>
+        <p class="text-gray-500 mb-1">{{ releases.repo }}</p>
+        <p v-if="releases.error" class="text-red-400">{{ releases.error }}</p>
+        <p v-else-if="!releases.releases.length" class="text-gray-500">{{ t('updates.no_versions') }}</p>
+        <template v-else>
+          <select v-model="selectedTag" class="p-1 rounded bg-gray-700 w-full">
+            <option v-for="r of releases.releases" :key="r.tag" :value="r.tag">
+              {{ r.version }} — {{ fmtDate(r.publishedAt) }}{{ r.prerelease ? ' (pre-release)' : '' }}{{ r.version === version ? ' ✓' : '' }}
+            </option>
+          </select>
+          <button @click="installSelected" :disabled="!canInstall"
+            class="btn w-full mt-1">{{ t('updates.install_version') }}</button>
+        </template>
+      </template>
+    </div>
     <div class="text-center mt-auto py-8">
       <p>{{ t('app.contact_me') }} <br><span class="font-sans text-gray-500 select-all">&lt;@295216259795124225&gt;</span></p>
       <ul class="flex gap-4">
@@ -38,12 +57,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Host } from '@/web/background/IPC'
 import { AppConfig } from '@/web/Config'
 import { DateTime } from 'luxon'
 import { configProp } from './utils'
+import type { IpcEventPayload } from '@ipc/types'
 
 function checkForUpdates () {
   Host.sendEvent({
@@ -68,6 +88,10 @@ function quitAndInstall () {
   })
 }
 
+function fmtDate (iso: string) {
+  return DateTime.fromISO(iso).toLocaleString(DateTime.DATE_MED)
+}
+
 function fmtTime (millis: number) {
   return DateTime.fromMillis(millis).toRelative({ style: 'long' }) ?? 'n/a'
 }
@@ -83,6 +107,33 @@ export default defineComponent({
       get () { return props.config.updateChannel ?? 'default' },
       set (value) { props.config.updateChannel = value }
     })
+    const releases = ref<IpcEventPayload<'MAIN->CLIENT::updater-releases'>>()
+    const releasesLoading = ref(false)
+    const selectedTag = ref<string>()
+    const releasesListener = Host.onEvent('MAIN->CLIENT::updater-releases', (payload) => {
+      releases.value = payload
+      releasesLoading.value = false
+      selectedTag.value = payload.releases[0]?.tag
+    })
+    onUnmounted(() => releasesListener.abort())
+
+    function listReleases () {
+      releasesLoading.value = true
+      Host.sendEvent({ name: 'CLIENT->MAIN::user-action', payload: { action: 'list-releases' } })
+    }
+    function installSelected () {
+      if (!selectedTag.value) return
+      Host.sendEvent({ name: 'CLIENT->MAIN::user-action', payload: { action: 'install-release', tag: selectedTag.value } })
+    }
+    const canInstall = computed(() => {
+      const state = Host.updateInfo.value.state
+      const selected = releases.value?.releases.find(r => r.tag === selectedTag.value)
+      return selected != null &&
+        selected.version !== Host.version.value &&
+        state !== 'checking-for-update' &&
+        !(state === 'update-available' && !Host.updateInfo.value.noDownloadReason) // downloading
+    })
+
     const updateRepo = computed({
       get () { return props.config.updateRepo ?? '' },
       set (value) { props.config.updateRepo = value }
@@ -113,6 +164,13 @@ export default defineComponent({
       info,
       updateChannel,
       updateRepo,
+      releases,
+      releasesLoading,
+      selectedTag,
+      listReleases,
+      installSelected,
+      canInstall,
+      fmtDate,
       version: Host.version
     }
   }

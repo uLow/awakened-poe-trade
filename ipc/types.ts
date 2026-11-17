@@ -76,6 +76,7 @@ export type IpcEvent =
   // events used by any type of Client:
   IpcSaveConfig |
   IpcUpdaterState |
+  IpcUpdaterReleases |
   IpcGameLog |
   IpcClientIsActive |
   IpcLogEntry |
@@ -173,6 +174,20 @@ type IpcGameLog =
 type IpcUpdaterState =
   Event<'MAIN->CLIENT::updater-state', UpdateInfo>
 
+export interface ReleaseInfo {
+  tag: string
+  version: string
+  publishedAt: string
+  prerelease: boolean
+}
+
+type IpcUpdaterReleases =
+  Event<'MAIN->CLIENT::updater-releases', {
+    repo: string // "owner/repo"
+    releases: ReleaseInfo[]
+    error?: string
+  }>
+
 // Hotkeyable actions are defined in `ShortcutAction`.
 // Actions below are triggered by user interaction with the UI.
 type IpcUserAction =
@@ -181,6 +196,11 @@ type IpcUserAction =
   } | {
     action: 'stash-search'
     text: string
+  } | {
+    action: 'list-releases'
+  } | {
+    action: 'install-release'
+    tag: string
   }>
 
 interface Event<TName extends string, TPayload = undefined> {

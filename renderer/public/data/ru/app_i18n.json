@@ -273,6 +273,10 @@
     "channel_official": "Официальный (SnosMe/awakened-poe-trade)",
     "channel_github": "Свой репозиторий GitHub",
     "channel_off": "Выключено (только ручная проверка)",
+    "pick_version": "Установить определённую версию",
+    "show_versions": "Показать доступные версии",
+    "no_versions": "Не найдено релизов для установки",
+    "install_version": "Скачать и установить",
     "channel_hint": "Применяется после нажатия «Сохранить»"
   },
   "widget_menu": {
