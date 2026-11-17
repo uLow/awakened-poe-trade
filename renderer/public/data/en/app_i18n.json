@@ -252,7 +252,13 @@
     "downloads_page": "Open the Downloads page",
     "installed_on_exit": "It will be installed automatically on exit",
     "download_manually": "You can download it from GitHub",
-    "download_disabled": "You have disabled automatic updates download"
+    "download_disabled": "You have disabled automatic updates download",
+    "channel": "Update channel",
+    "channel_default": "Default (where this build came from)",
+    "channel_official": "Official (SnosMe/awakened-poe-trade)",
+    "channel_github": "Custom GitHub repository",
+    "channel_off": "Off (check manually only)",
+    "channel_hint": "Applied after you press Save"
   },
   "widget_menu": {
     "add": "add widget\u2026",

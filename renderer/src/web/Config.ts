@@ -1,7 +1,7 @@
 import { reactive as deepReactive, shallowRef, toRaw } from 'vue'
 import isDeepEqual from 'fast-deep-equal'
 import { Host } from '@/web/background/IPC'
-import { HostConfig, ShortcutAction } from '@ipc/types'
+import { HostConfig, ShortcutAction, UpdateChannel } from '@ipc/types'
 import type * as widget from './overlay/widgets'
 import type { StashSearchWidget } from './stash-search/widget'
 import type { ItemCheckWidget } from './item-check/widget'
@@ -120,6 +120,9 @@ export interface Config {
   widgets: widget.Widget[]
   fontSize: number
   showAttachNotification: boolean
+  // optional to stay compatible with configs of the official build
+  updateChannel?: 'default' | 'official' | 'github' | 'off'
+  updateRepo?: string // "owner/repo" for the 'github' channel
 }
 
 export const defaultConfig = (): Config => ({
@@ -566,6 +569,24 @@ function getConfigForHost (): HostConfig {
     overlayKey: config.overlayKey,
     logKeys: config.logKeys,
     windowTitle: config.windowTitle,
-    language: config.language
+    language: config.language,
+    updateChannel: getUpdateChannel(config)
+  }
+}
+
+function getUpdateChannel (config: Config): UpdateChannel {
+  switch (config.updateChannel) {
+    case 'off':
+      return { type: 'off' }
+    case 'github': {
+      const [owner, repo] = (config.updateRepo ?? '').trim().split('/')
+      return (owner && repo)
+        ? { type: 'github', owner, repo }
+        : { type: 'off' }
+    }
+    case 'official':
+      return { type: 'official' }
+    default:
+      return { type: 'default' }
   }
 }

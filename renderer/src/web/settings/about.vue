@@ -15,6 +15,18 @@
       <button v-if="info.action" @click="info.action"
         class="btn w-full mt-1">{{ info.actionText }}</button>
     </div>
+    <div class="w-72 mt-4">
+      <div class="mb-1">{{ t('updates.channel') }}</div>
+      <select v-model="updateChannel" class="p-1 rounded bg-gray-700 w-full">
+        <option value="default">{{ t('updates.channel_default') }}</option>
+        <option value="official">{{ t('updates.channel_official') }}</option>
+        <option value="github">{{ t('updates.channel_github') }}</option>
+        <option value="off">{{ t('updates.channel_off') }}</option>
+      </select>
+      <input v-if="updateChannel === 'github'" v-model.trim="updateRepo"
+        class="rounded bg-gray-900 px-1 block w-full font-sans mt-1" placeholder="owner/repo">
+      <p class="text-gray-500 mt-1">{{ t('updates.channel_hint') }}</p>
+    </div>
     <div class="text-center mt-auto py-8">
       <p>{{ t('app.contact_me') }} <br><span class="font-sans text-gray-500 select-all">&lt;@295216259795124225&gt;</span></p>
       <ul class="flex gap-4">
@@ -29,7 +41,9 @@
 import { defineComponent, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Host } from '@/web/background/IPC'
+import { AppConfig } from '@/web/Config'
 import { DateTime } from 'luxon'
+import { configProp } from './utils'
 
 function checkForUpdates () {
   Host.sendEvent({
@@ -39,7 +53,12 @@ function checkForUpdates () {
 }
 
 function openDownloadPage () {
-  window.open('https://snosme.github.io/awakened-poe-trade/download')
+  const { updateChannel, updateRepo } = AppConfig()
+  if (updateChannel === 'github' && updateRepo?.includes('/')) {
+    window.open(`https://github.com/${updateRepo.trim()}/releases`)
+  } else {
+    window.open('https://snosme.github.io/awakened-poe-trade/download')
+  }
 }
 
 function quitAndInstall () {
@@ -56,8 +75,18 @@ function fmtTime (millis: number) {
 export default defineComponent({
   name: 'settings.about',
   inheritAttrs: false,
-  setup () {
+  props: configProp(),
+  setup (props) {
     const { t } = useI18n()
+
+    const updateChannel = computed({
+      get () { return props.config.updateChannel ?? 'default' },
+      set (value) { props.config.updateChannel = value }
+    })
+    const updateRepo = computed({
+      get () { return props.config.updateRepo ?? '' },
+      set (value) { props.config.updateRepo = value }
+    })
 
     const info = computed(() => {
       const rawInfo = Host.updateInfo.value
@@ -82,6 +111,8 @@ export default defineComponent({
     return {
       t,
       info,
+      updateChannel,
+      updateRepo,
       version: Host.version
     }
   }

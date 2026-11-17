@@ -8,7 +8,14 @@ export interface HostConfig {
   logKeys: boolean
   windowTitle: string
   language: string
+  updateChannel: UpdateChannel
 }
+
+export type UpdateChannel =
+  | { type: 'default' } // repository the running build was published to
+  | { type: 'official' }
+  | { type: 'github', owner: string, repo: string }
+  | { type: 'off' }
 
 export interface ShortcutAction {
   shortcut: string
@@ -43,7 +50,7 @@ export type UpdateInfo =
   } | {
     state: 'update-available'
     version: string
-    noDownloadReason: 'not-supported' | 'disabled-by-flag' | null
+    noDownloadReason: 'not-supported' | 'disabled-by-flag' | 'channel-off' | null
   } | {
     state: 'update-downloaded'
     version: string
