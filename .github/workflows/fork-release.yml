@@ -1,0 +1,80 @@
+# Builds the Windows installer and publishes it as a GitHub release
+# of the repository this workflow runs in (a fork), so the app's
+# "Default" update channel picks it up.
+#
+# Version: MAJOR.MINOR.(PATCH * 1000 + run number), e.g. 3.30.101 -> 3.30.101007
+# - always higher than the upstream version it is based on,
+#   so it installs over / updates the official build
+# - grows with every run and with every upstream patch release
+name: Fork release
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - 'docs/**'
+      - README.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fork-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository_owner != 'SnosMe'
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+
+    - run: npm ci
+      working-directory: ./renderer
+    - run: npm run build
+      working-directory: ./renderer
+
+    - run: npm ci
+      working-directory: ./main
+    - name: Set fork version
+      id: version
+      working-directory: ./main
+      shell: bash
+      run: |
+        UPSTREAM=$(node -p "require('./package.json').version")
+        VERSION=$(node -p "const [a,b,c]=process.argv[1].split('.').map(Number); [a,b,c*1000+Number(process.argv[2])].join('.')" "$UPSTREAM" "${{ github.run_number }}")
+        npm pkg set version="$VERSION"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        echo "Upstream $UPSTREAM -> fork $VERSION"
+    - run: npm run build
+      working-directory: ./main
+    # CLI overrides (-c.publish.owner=...) are ignored for the `publish` list,
+    # so write a copy of the config that publishes to this repository
+    - name: Point publish config to this repository
+      working-directory: ./main
+      shell: bash
+      env:
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
+      run: |
+        node -e "
+          const fs = require('fs')
+          const src = fs.readFileSync('electron-builder.yml', 'utf8')
+          const out = src.replace(/^publish:\r?\n(?:[ \t]+-.*\r?\n)+/m,
+            'publish:\n  - provider: github\n    owner: ' + process.env.OWNER +
+            '\n    repo: ' + process.env.REPO + '\n    releaseType: release\n')
+          if (out === src) throw new Error('publish section not found')
+          fs.writeFileSync('electron-builder.fork.yml', out)
+        "
+        cat electron-builder.fork.yml
+    - name: Package and publish
+      working-directory: ./main
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npx electron-builder build --win -p always --config electron-builder.fork.yml
+    - name: Hash
+      run: type .\main\dist\latest.yml
