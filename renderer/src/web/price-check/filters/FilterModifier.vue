@@ -66,22 +66,22 @@
             </template>
           </ui-popover>
         </div>
-        <div class="flex-1 min-w-0 flex items-start gap-x-2">
-          <span v-if="filter.not"
+        <div class="flex items-start gap-x-2"
+          :class="(roll && roll.bounds) ? 'shrink-0 mr-2' : 'flex-1 min-w-0'">
+          <span v-if="filter.not" class="shrink-0"
             :class="[$style['tag'], $style['tag-not']]">{{ t('filters.tag_not') }}</span>
-          <span v-if="showTag"
+          <span v-if="showTag" class="shrink-0"
             :class="[$style['tag'], $style[`tag-${tag}`]]">{{ t(`filters.tag_${tag.replace('-', '_')}`) }}{{ (filter.sources.length > 1) ? ` x ${filter.sources.length}` : null }}</span>
-          <filter-modifier-tiers v-if="!showBounds()"
+          <filter-modifier-tiers class="shrink-0"
             :filter="filter" :item="item" />
-          <span v-if="rangeText && !showBounds()"
-            :class="$style.rollRange">{{ rangeText }}</span>
           <filter-modifier-options v-if="rollOptions"
             show-checked="always"
             :options="rollOptions"
             :filter="filter" />
         </div>
-        <stat-roll-slider v-if="roll && roll.bounds && showBounds()"
-          class="ml-2 mr-4" style="width: 12.5rem;"
+        <!-- range of the mod(s), known from advanced item description -->
+        <stat-roll-slider v-if="roll && roll.bounds"
+          class="ml-auto mr-4" style="flex: 1 1 12.5rem; max-width: 12.5rem; min-width: 5rem;"
           v-model="sliderValue"
           :roll="roll.value"
           :dp="roll.dp"
@@ -294,15 +294,6 @@ export default defineComponent({
         }
       }),
       roll: computed(() => props.filter.roll),
-      // possible range of the mod(s), known from advanced item description
-      rangeText: computed(() => {
-        const bounds = props.filter.roll?.bounds
-        if (!bounds) return undefined
-        // same number of decimals on both ends: 1.6–2.0
-        const decimals = (n: number) => (String(Number(n.toFixed(2))).split('.')[1] ?? '').length
-        const dp = Math.max(decimals(bounds.min), decimals(bounds.max))
-        return `${bounds.min.toFixed(dp)}–${bounds.max.toFixed(dp)}`
-      }),
       isHidden: computed(() => props.filter.hidden != null),
       rollTags: computed(() => {
         const out: string[] = []
@@ -334,7 +325,6 @@ export default defineComponent({
             props.filter.sources[0].modifier.info.rank != null
           )
         )),
-      showBounds: () => props.item.rarity === ItemRarity.Unique,
       inputFocus,
       toggleFilter,
       toggleExpanded,
@@ -456,13 +446,6 @@ export default defineComponent({
 
 .filter:not(:hover) > .mods {
   display: none;
-}
-
-.rollRange {
-  font-size: theme('fontSize.xs');
-  line-height: 1;
-  white-space: nowrap;
-  @apply text-gray-400;
 }
 
 .tag {
