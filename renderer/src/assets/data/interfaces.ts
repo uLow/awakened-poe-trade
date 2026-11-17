@@ -178,6 +178,7 @@ export interface TranslationDict {
   METAMORPH_HELP: string
   BEAST_HELP: string
   VOIDSTONE_HELP: string
+  VISCERA_HELP: string
   METAMORPH_BRAIN: RegExp
   METAMORPH_EYE: RegExp
   METAMORPH_LUNG: RegExp
@@ -248,6 +249,7 @@ export interface TranslationDict {
   FOULBORN_NAME: RegExp
   FOULBORN_MODIFIER: string
   VESTIGIAL_NAME: RegExp
+  VISCERA_NAME: RegExp
   VESTIGIAL_IMPLICIT: string
   MAP_AREA: string
   CHART_SULPHUR: string

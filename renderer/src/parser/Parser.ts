@@ -38,6 +38,7 @@ const parsers: Array<ParserFn | { virtual: VirtualParserFn }> = [
   parseCategoryByHelpText,
   { virtual: parseMapTier },
   { virtual: normalizeName },
+  { virtual: normalizeVisceraName },
   { virtual: findInDatabase },
   // -----------
   parseItemLevel,
@@ -81,6 +82,7 @@ const parsers: Array<ParserFn | { virtual: VirtualParserFn }> = [
   parseModifiers, // scourge
   parseModifiers, // implicit
   parseModifiers, // explicit
+  parseVisceraModifiers,
   { virtual: augmentModifiers },
   { virtual: transformToLegacyModifiers },
   { virtual: parseFractured },
@@ -834,6 +836,47 @@ function parseModifiers (section: string[], item: ParsedItem) {
   return 'SECTION_PARSED'
 }
 
+function normalizeVisceraName (item: ParserState) {
+  if (item.category !== ItemCategory.Viscera) return
+
+  // "Lesser Pocked Leg" -> "Pocked Leg", trade site only knows the base type
+  const match = _$.VISCERA_NAME.exec(item.name)
+  if (match && ITEM_BY_TRANSLATED('ITEM', match[1])?.length) {
+    item.name = match[1]
+  }
+}
+
+function parseVisceraModifiers (section: string[], item: ParsedItem) {
+  if (item.category !== ItemCategory.Viscera) return 'PARSER_SKIPPED'
+  // already parsed from advanced mod descriptions or "(implicit)" suffixes
+  if (item.newMods.length) return 'PARSER_SKIPPED'
+
+  const modifier: ParsedModifier = {
+    info: { type: ModifierType.Implicit, tags: [] },
+    stats: []
+  }
+  const statIterator = linesToStatStrings(section)
+  let stat = statIterator.next()
+  while (!stat.done) {
+    const parsedStat = tryParseTranslation(stat.value, modifier.info.type, item.category)
+    if (parsedStat) {
+      modifier.stats.push(parsedStat)
+      stat = statIterator.next(true)
+    } else {
+      stat = statIterator.next(false)
+    }
+  }
+  // slot name, flavour text, etc.
+  if (!modifier.stats.length) return 'SECTION_SKIPPED'
+
+  item.newMods.push(modifier)
+  item.unknownModifiers.push(...stat.value.map(line => ({
+    text: line,
+    type: modifier.info.type
+  })))
+  return 'SECTION_PARSED'
+}
+
 function parseMirrored (section: string[], item: ParsedItem) {
   if (section[0] === _$.MIRRORED) {
     item.isMirrored = true
@@ -979,6 +1022,12 @@ function parseCategoryByHelpText (section: string[], item: ParsedItem) {
     return 'SECTION_PARSED'
   } else if (section[0] === _$.VOIDSTONE_HELP) {
     item.category = ItemCategory.Voidstone
+    return 'SECTION_PARSED'
+  } else if (section[0] === _$.VISCERA_HELP) {
+    item.category = ItemCategory.Viscera
+    // Viscera have no "Rarity:" line, but their implicits
+    // must go through the regular modifier parsers
+    item.rarity = ItemRarity.Normal
     return 'SECTION_PARSED'
   }
 

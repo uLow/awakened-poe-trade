@@ -56,6 +56,7 @@ export default {
   METAMORPH_HELP: '테인의 연구실에서 이 아이템을 다른 샘플과 조합하십시오.',
   BEAST_HELP: '우클릭으로 이것을 야수 도감에 추가하십시오.',
   VOIDSTONE_HELP: '아틀라스에 이 아이템을 장착하여 지도를 강화하십시오.',
+  VISCERA_HELP: '__TODO_VISCERA_HELP__', // TODO: localized help text
   METAMORPH_BRAIN: /^Мозг: .*$/,
   METAMORPH_EYE: /^Глаз: .*$/,
   METAMORPH_LUNG: /^Лёгкое: .*$/,
@@ -126,6 +127,7 @@ export default {
   FOULBORN_NAME: /^삿된 (.*)$/,
   FOULBORN_MODIFIER: '삿된 고유 속성',
   VESTIGIAL_NAME: /^흔적 (.*)$/,
+  VISCERA_NAME: /^$/, // TODO: localized tier prefixes (Lesser/Greater)
   VESTIGIAL_IMPLICIT: '흔적 고정 속성',
   MAP_AREA: '지도 지역: ',
   CHART_SULPHUR: '망자의 유황: ',

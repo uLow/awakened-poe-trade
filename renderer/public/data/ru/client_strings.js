@@ -56,6 +56,7 @@ export default {
   METAMORPH_HELP: 'Объедините эту часть с четырьмя другими в Лаборатории Танэ.',
   BEAST_HELP: 'Нажмите ПКМ, чтобы добавить это в ваш Бестиарий.',
   VOIDSTONE_HELP: 'Поместите этот предмет в ваш Атлас, чтобы усилить карты.',
+  VISCERA_HELP: '__TODO_VISCERA_HELP__', // TODO: localized help text
   METAMORPH_BRAIN: /^Мозг: .*$/,
   METAMORPH_EYE: /^Глаз: .*$/,
   METAMORPH_LUNG: /^Лёгкое: .*$/,
@@ -126,6 +127,7 @@ export default {
   FOULBORN_NAME: /^(?:Нечестивый|Нечестивая|Нечестивое|Нечестивые) (.*)$/,
   FOULBORN_MODIFIER: 'Нечестивое уникальное свойство',
   VESTIGIAL_NAME: /^Вырожденный: (.*)$/,
+  VISCERA_NAME: /^$/, // TODO: localized tier prefixes (Lesser/Greater)
   VESTIGIAL_IMPLICIT: 'Собственное свойство вояжа',
   MAP_AREA: 'Область карты: ',
   CHART_SULPHUR: 'Мертвецкая сера: ',

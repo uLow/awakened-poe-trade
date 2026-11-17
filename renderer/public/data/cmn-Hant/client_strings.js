@@ -56,6 +56,7 @@ export default {
   METAMORPH_HELP: '在塔恩的鍊金室將此與其他四個不同的樣本合成。',
   BEAST_HELP: '點擊右鍵將此加入你的獸獵寓言。',
   VOIDSTONE_HELP: '放置於輿圖中以強化你的地圖。',
+  VISCERA_HELP: '__TODO_VISCERA_HELP__', // TODO: localized help text
   METAMORPH_BRAIN: /^.* 腦髓$/,
   METAMORPH_EYE: /^.* 眼睛$/,
   METAMORPH_LUNG: /^.* 肺臟$/,
@@ -126,6 +127,7 @@ export default {
   FOULBORN_NAME: /^穢生 (.*)$/,
   FOULBORN_MODIFIER: 'Foulborn Unique Modifier',
   VESTIGIAL_NAME: /^殘存 (.*)$/,
+  VISCERA_NAME: /^$/, // TODO: localized tier prefixes (Lesser/Greater)
   VESTIGIAL_IMPLICIT: '殘存固定詞綴',
   MAP_AREA: '地圖區域: ',
   CHART_SULPHUR: '亡者硫酸: ',

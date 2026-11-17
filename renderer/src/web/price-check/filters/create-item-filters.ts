@@ -87,6 +87,14 @@ export function createFilters (
     }
     return filters
   }
+  if (item.category === ItemCategory.Viscera) {
+    // base type + implicit stats, tier ("Lesser", "Greater") is defined by the rolls
+    filters.searchExact = {
+      baseType: item.info.name,
+      baseTypeTrade: t(opts, item.info)
+    }
+    return filters
+  }
   if (item.info.refName === 'Scrying Orb') {
     filters.searchExact = {
       baseType: item.info.name,
