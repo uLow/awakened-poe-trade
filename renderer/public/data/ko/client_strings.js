@@ -24,6 +24,7 @@ export default {
   CORPSE_LEVEL: '시신 레벨: ',
   TALISMAN_TIER: '부적 등급: ',
   GEM_LEVEL: '레벨: ',
+  STORED_EXPERIENCE: '__TODO_STORED_EXPERIENCE__', // TODO: localized text
   STACK_SIZE: '중첩 개수: ',
   SOCKETS: '홈: ',
   QUALITY: '퀄리티: ',

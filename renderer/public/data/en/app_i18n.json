@@ -64,6 +64,7 @@
     "stock": "Stock: {0}",
     "map_tier": "Map Tier: {0}",
     "area_level": "Area Level: {0}",
+    "stored_experience": "Stored Experience: {0}",
     "heist_job_lockpicking": "Requires Lockpicking (Level {0})",
     "heist_job_bruteforce": "Requires Brute Force (Level {0})",
     "heist_job_perception": "Requires Perception (Level {0})",

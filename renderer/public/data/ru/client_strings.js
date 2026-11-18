@@ -24,6 +24,7 @@ export default {
   CORPSE_LEVEL: 'Уровень трупа: ',
   TALISMAN_TIER: 'Уровень талисмана: ',
   GEM_LEVEL: 'Уровень: ',
+  STORED_EXPERIENCE: '__TODO_STORED_EXPERIENCE__', // TODO: localized text
   STACK_SIZE: 'Размер стопки: ',
   SOCKETS: 'Гнезда: ',
   QUALITY: 'Качество: ',

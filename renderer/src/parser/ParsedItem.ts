@@ -37,6 +37,7 @@ export interface ParsedItem {
 
   mapArea?: BaseType
   areaLevel?: number
+  storedExperience?: number
   areaItemQuantity?: number
   areaItemRarity?: number
   areaPackSize?: number

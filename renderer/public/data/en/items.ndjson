@@ -4874,3 +4874,4 @@
 {"name": "Warden's Arm", "refName": "Warden's Arm", "namespace": "ITEM", "craftable": {"category": "Viscera"}, "icon": ""}
 {"name": "Witch's Head", "refName": "Witch's Head", "namespace": "ITEM", "craftable": {"category": "Viscera"}, "icon": ""}
 {"name": "Wraith Claws", "refName": "Wraith Claws", "namespace": "ITEM", "craftable": {"category": "Viscera"}, "icon": ""}
+{"name": "Facetor's Lens", "refName": "Facetor's Lens", "namespace": "ITEM", "icon": ""}

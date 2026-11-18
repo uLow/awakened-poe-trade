@@ -403,6 +403,13 @@ export function createTradeRequest (filters: ItemFilters, stats: FilterOrGroup[]
     propSet(query.filters, 'misc_filters.filters.identified.option', String(false))
   }
 
+  if (filters.storedExperience && !filters.storedExperience.disabled) {
+    propSet(query.filters, 'misc_filters.filters.stored_experience.min', filters.storedExperience.value)
+    if (filters.storedExperience.max) {
+      propSet(query.filters, 'misc_filters.filters.stored_experience.max', filters.storedExperience.max)
+    }
+  }
+
   if (filters.areaLevel && !filters.areaLevel.disabled) {
     propSet(query.filters, 'map_filters.filters.area_level.min', filters.areaLevel.value)
     if (filters.areaLevel.max) {

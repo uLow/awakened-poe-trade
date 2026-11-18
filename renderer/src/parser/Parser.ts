@@ -51,6 +51,7 @@ const parsers: Array<ParserFn | { virtual: VirtualParserFn }> = [
   parseFlask,
   parseTincture,
   parseStackSize,
+  parseStoredExperience,
   parseCorrupted,
   parseImbuedGem,
   parseFoil,
@@ -555,6 +556,17 @@ function parseStackSize (section: string[], item: ParsedItem) {
     const [value, max] = section[0].slice(_$.STACK_SIZE.length).replace(/[^\d/]/g, '').split('/').map(Number)
     item.stackSize = { value, max }
 
+    return 'SECTION_PARSED'
+  }
+  return 'SECTION_SKIPPED'
+}
+
+// Facetor's Lens "Stored Experience: 500,000,000"
+function parseStoredExperience (section: string[], item: ParsedItem) {
+  if (item.category !== ItemCategory.Currency) return 'PARSER_SKIPPED'
+
+  if (section[0].startsWith(_$.STORED_EXPERIENCE)) {
+    item.storedExperience = Number(section[0].slice(_$.STORED_EXPERIENCE.length).replace(/[^\d]/g, ''))
     return 'SECTION_PARSED'
   }
   return 'SECTION_SKIPPED'
