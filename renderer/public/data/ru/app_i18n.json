@@ -83,6 +83,7 @@
     "stock": "Запас: {0}",
     "map_tier": "Ур. карты: {0}",
     "area_level": "Ур. области: {0}",
+    "stored_experience": "Накопленный опыт: {0}",
     "heist_job_lockpicking": "Требуется взлом ({0} уровень)",
     "heist_job_bruteforce": "Требуется грубая сила ({0} уровень)",
     "heist_job_perception": "Требуется восприятие ({0} уровень)",

@@ -147,6 +147,7 @@ export interface TranslationDict {
   CORPSE_LEVEL: string
   TALISMAN_TIER: string
   GEM_LEVEL: string
+  STORED_EXPERIENCE: string
   STACK_SIZE: string
   SOCKETS: string
   QUALITY: string

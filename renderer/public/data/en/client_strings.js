@@ -25,6 +25,7 @@ export default {
   CORPSE_LEVEL: 'Corpse Level: ',
   TALISMAN_TIER: 'Talisman Tier: ',
   GEM_LEVEL: 'Level: ',
+  STORED_EXPERIENCE: 'Stored Experience: ',
   STACK_SIZE: 'Stack Size: ',
   SOCKETS: 'Sockets: ',
   QUALITY: 'Quality: ',

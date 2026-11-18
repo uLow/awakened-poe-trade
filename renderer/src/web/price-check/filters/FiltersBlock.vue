@@ -11,6 +11,8 @@
         :filter="{ disabled: false }" :text="t('item.map_foil_reward', [filters.mapCompletionReward.name])" />
       <filter-btn-numeric v-if="filters.areaLevel"
         :filter="filters.areaLevel" :name="t('item.area_level')" />
+      <filter-btn-numeric v-if="filters.storedExperience"
+        :filter="filters.storedExperience" :name="t('item.stored_experience')" />
       <filter-btn-numeric v-if="filters.sentinelCharge"
         :filter="filters.sentinelCharge" :name="t('item.sentinel_charge')" />
       <filter-btn-numeric v-if="filters.itemLevel"

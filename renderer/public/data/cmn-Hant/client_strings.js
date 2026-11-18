@@ -25,6 +25,7 @@ export default {
   CORPSE_LEVEL: '屍體等級: ',
   TALISMAN_TIER: '魔符階級: ',
   GEM_LEVEL: '等級: ',
+  STORED_EXPERIENCE: '__TODO_STORED_EXPERIENCE__', // TODO: localized text
   STACK_SIZE: '堆疊數量: ',
   SOCKETS: '插槽: ',
   QUALITY: '品質: ',

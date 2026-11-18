@@ -82,6 +82,7 @@ export interface ItemFilters {
     disabled: boolean
   }
   areaLevel?: FilterNumeric
+  storedExperience?: FilterNumeric
   sentinelCharge?: FilterNumeric
   trade: {
     offline: boolean

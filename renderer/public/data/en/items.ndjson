@@ -62,6 +62,7 @@
 {"name":"Eldritch Depths","refName":"Eldritch Depths","namespace":"AREA","tradeDisc":"EldritchDepths","icon":"","area":{"special":true}}
 {"name":"Estuary","refName":"Estuary","namespace":"AREA","tradeDisc":"40753","icon":"","area":{"screenshot":"https://i.imgur.com/LNLcK2Z.jpg"}}
 {"name":"Excavation","refName":"Excavation","namespace":"AREA","tradeDisc":"33025","icon":"","area":{"screenshot":"https://i.imgur.com/A3E80Du.jpg"}}
+{"name":"Facetor's Lens","refName":"Facetor's Lens","namespace":"ITEM","icon":""}
 {"name":"Factory","refName":"Factory","namespace":"AREA","tradeDisc":"41763","icon":"","area":{"screenshot":"https://i.imgur.com/zOsCvpG.jpg"}}
 {"name":"Fields","refName":"Fields","namespace":"AREA","tradeDisc":"36207","icon":"","area":{"screenshot":"https://i.imgur.com/ZBYW0jj.jpg"}}
 {"name":"Flooded Mine","refName":"Flooded Mine","namespace":"AREA","tradeDisc":"63065","icon":"","area":{"screenshot":"https://i.imgur.com/RYNfkXJ.jpg"}}
